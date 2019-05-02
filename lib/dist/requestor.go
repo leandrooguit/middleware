@@ -1,4 +1,11 @@
 package dist
 
-type requestor interface {
+type Invocation interface {
+}
+
+type Termination interface {
+}
+
+type Requestor interface {
+	Invoke(inv Invocation) Termination
 }
