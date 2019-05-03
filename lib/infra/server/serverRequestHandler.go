@@ -1,4 +1,4 @@
 package server
 
-type serverRequestHandler interface {
+type ServerRequestHandler interface {
 }
