@@ -1,6 +1,6 @@
 package client
 
-type clientRequestHandler interface {
-	send(msg []byte)
-	receive() (msg []byte)
+type ClientRequestHandler interface {
+	Send(msg []byte)
+	Receive() (msg []byte)
 }

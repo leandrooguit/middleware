@@ -1,4 +1,4 @@
 package dist
 
-type invoker interface {
+type Invoker interface {
 }
