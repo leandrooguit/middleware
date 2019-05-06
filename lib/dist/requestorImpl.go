@@ -66,7 +66,8 @@ func (t TerminationImpl) Result() interface{} {
 type RequestorImpl struct{}
 
 func (RequestorImpl) Invoke(inv Invocation) Termination {
-	crh := client.ClientRequestHandlerImpl{}
+
+	crh := client.ClientRequestHandlerImpl{Host: inv.IpAddress(), Port: inv.PortNumber()}
 
 	msg := MessageImpl{HeaderImpl{}, BodyImpl{}} // inv.IpAddress() / strconv.Itoa(inv.PortNumber()) / inv.OperationName())
 
@@ -78,3 +79,4 @@ func (RequestorImpl) Invoke(inv Invocation) Termination {
 
 	return t
 }
+
