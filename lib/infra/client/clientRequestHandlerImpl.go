@@ -28,18 +28,19 @@ func NewClientRequestHandlerImpl(host string, port int) *ClientRequestHandlerImp
 }
 
 func (crh ClientRequestHandlerImpl) Receive() (msg []byte) {
-	return nil
-	//panic("implement me")
+	_, err := crh.conect.Read(msg)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(3)
+	}
+
+	return msg
 }
 
 func (crh ClientRequestHandlerImpl) Send(msg []byte) {
-
 	_, erro2 := crh.conect.Write(msg)
-
 	if erro2 != nil {
 		fmt.Println(erro2)
 		os.Exit(3)
 	}
-
-	fmt.Println("Mensagem enviada de forma ficticia")
 }
