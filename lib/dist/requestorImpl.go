@@ -69,7 +69,12 @@ func (RequestorImpl) Invoke(inv Invocation) (t Termination, err error) {
 
 	crh := client.NewClientRequestHandlerImpl(inv.IpAddress(), inv.PortNumber())
 
-	msg := MessageImpl{HeaderImpl{"MID", "0.1", true, 0, 0}, BodyImpl{string()}} // inv.IpAddress() / strconv.Itoa(inv.PortNumber()) / inv.OperationName())
+	requestHeader := RequestHeader{inv.IpAddress(), inv.ObjectId(), true, inv.ObjectId(), inv.OperationName()}
+	requestBody := RequestBody{inv.Parameters()}
+
+	msg := Message{
+		Header{"GIOP", 1, true, 0, 0},
+		Body{requestHeader, requestBody, nil, nil}}
 
 	var bytes []byte
 	bytes, err = Marshall(msg)
@@ -79,12 +84,13 @@ func (RequestorImpl) Invoke(inv Invocation) (t Termination, err error) {
 
 	crh.Send(bytes)
 
-	msgReturned, err := Unmarshall(crh.Receive())
+	var msgReturned Message
+	msgReturned, err = Unmarshall(crh.Receive())
 	if err != nil {
 		return nil, err
 	}
 
-	t = TerminationImpl{msgReturned.Body().ReplyBody()}
+	t = TerminationImpl{msgReturned.Body.ReplyBody}
 
 	return t, err
 }

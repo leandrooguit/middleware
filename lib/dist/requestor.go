@@ -9,7 +9,7 @@ type Invocation interface {
 	SetPortNumber(portNumber int)
 	OperationName() string
 	SetOperationName(operationName string)
-	Parameters() [2]string
+	Parameters() []interface{}
 	SetParameters(parameters [2]string)
 }
 
