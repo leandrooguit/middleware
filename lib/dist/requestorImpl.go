@@ -2,7 +2,6 @@ package dist
 
 import (
 	"middleware/lib/infra/client"
-	"unsafe"
 )
 
 // Implements Invocation

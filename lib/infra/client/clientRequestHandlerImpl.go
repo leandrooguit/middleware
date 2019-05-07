@@ -1,11 +1,9 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 	"net"
 	"os"
-	"shared"
 	"strconv"
 )
 
@@ -37,6 +35,11 @@ func (crh ClientRequestHandlerImpl) Receive() (msg []byte) {
 func (crh ClientRequestHandlerImpl) Send(msg []byte) {
 
 	_, erro2 := crh.conect.Write(msg)
+
+	if erro2 != nil {
+		fmt.Println(erro2)
+		os.Exit(3)
+	}
 
 	fmt.Println("Mensagem enviada de forma ficticia")
 }
