@@ -1,11 +1,14 @@
 package dist
 
-// Todo Implementar Marshall
-func Marshall(message Message) []byte {
-	return nil
+import (
+	"encoding/json"
+)
+
+func Marshall(message Message) ([]byte, error) {
+	return json.Marshal(message)
 }
 
-// Todo Implementar Unmarshall
-func Unmarshall(message []byte) Message {
-	return nil
+func Unmarshall(marshaledMessage []byte) (message Message, err error) {
+	err = json.Unmarshal(marshaledMessage, &message)
+	return message, err
 }
