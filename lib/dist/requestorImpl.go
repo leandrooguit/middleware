@@ -2,6 +2,7 @@ package dist
 
 import (
 	"middleware/lib/infra/client"
+	"unsafe"
 )
 
 // Implements Invocation
@@ -65,18 +66,25 @@ func (t TerminationImpl) Result() interface{} {
 // Implements requestor
 type RequestorImpl struct{}
 
-func (RequestorImpl) Invoke(inv Invocation) Termination {
+func (RequestorImpl) Invoke(inv Invocation) (t Termination, err error) {
 
 	crh := client.ClientRequestHandlerImpl{Host: inv.IpAddress(), Port: inv.PortNumber()}
 
-	msg := MessageImpl{HeaderImpl{}, BodyImpl{}} // inv.IpAddress() / strconv.Itoa(inv.PortNumber()) / inv.OperationName())
+	msg := MessageImpl{HeaderImpl{"MID", "0.1", true, 0, 0}, BodyImpl{string()}} // inv.IpAddress() / strconv.Itoa(inv.PortNumber()) / inv.OperationName())
 
-	crh.Send(Marshall(msg))
+	var bytes []byte
+	bytes, err = Marshall(msg)
+	if err != nil {
+		return nil, err
+	}
+	crh.Send(bytes)
 
-	msgReturned := Unmarshall(crh.Receive())
+	msgReturned, err := Unmarshall(crh.Receive())
+	if err != nil {
+		return nil, err
+	}
 
-	t := TerminationImpl{msgReturned.Body().ReplyBody()}
+	t = TerminationImpl{msgReturned.Body().ReplyBody()}
 
-	return t
+	return t, err
 }
-

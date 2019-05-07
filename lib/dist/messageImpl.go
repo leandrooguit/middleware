@@ -1,56 +1,65 @@
 package dist
 
 type HeaderImpl struct {
+	magic      string
+	version    int
+	order      bool
+	headerType int
+	size       int
 }
 
-func (HeaderImpl) Magic() string {
-	panic("implement me")
+func (h HeaderImpl) Magic() string {
+	return h.magic
 }
 
-func (HeaderImpl) Version() int {
-	panic("implement me")
+func (h HeaderImpl) Version() int {
+	return h.version
 }
 
-func (HeaderImpl) Order() bool {
-	panic("implement me")
+func (h HeaderImpl) Order() bool {
+	return h.order
 }
 
-func (HeaderImpl) Type() int {
-	panic("implement me")
+func (h HeaderImpl) Type() int {
+	return h.headerType
 }
 
-func (HeaderImpl) Size() int {
-	panic("implement me")
+func (h HeaderImpl) Size() int {
+	return h.size
 }
 
 type BodyImpl struct {
+	requestHeader string
+	requestBody   string
+	replyHeader   string
+	replyBody     interface{}
 }
 
-func (BodyImpl) RequestHeader() string {
-	panic("implement me")
+func (b BodyImpl) RequestHeader() string {
+	return b.requestHeader
 }
 
-func (BodyImpl) RequestBody() string {
-	panic("implement me")
+func (b BodyImpl) RequestBody() string {
+	return b.requestBody
 }
 
-func (BodyImpl) ReplyHeader() string {
-	panic("implement me")
+func (b BodyImpl) ReplyHeader() string {
+	return b.replyHeader
 }
 
-func (BodyImpl) ReplyBody() string {
-	panic("implement me")
+func (b BodyImpl) ReplyBody() interface{} {
+	return b.replyBody
 }
 
 type MessageImpl struct {
-	header HeaderImpl
-	body   BodyImpl
+	header Header
+	body   Body
 }
 
-func (MessageImpl) Header() Header {
-	panic("implement me")
+func (m MessageImpl) Body() Body {
+	return m.body
 }
 
-func (MessageImpl) Body() Body {
-	panic("implement me")
+func (m MessageImpl) Header() Header {
+	return m.header
 }
