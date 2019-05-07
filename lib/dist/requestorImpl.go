@@ -10,7 +10,7 @@ type InvocationImpl struct {
 	ipAddress     string
 	portNumber    int
 	operationName string
-	parameters    [2]string
+	parameters    []interface{}
 }
 
 func (i InvocationImpl) ObjectId() int {
@@ -45,11 +45,11 @@ func (i InvocationImpl) SetOperationName(operationName string) {
 	i.operationName = operationName
 }
 
-func (i InvocationImpl) Parameters() [2]string {
+func (i InvocationImpl) Parameters() []interface{} {
 	return i.parameters
 }
 
-func (i InvocationImpl) SetParameters(parameters [2]string) {
+func (i InvocationImpl) SetParameters(parameters []interface{}) {
 	i.parameters = parameters
 }
 
@@ -74,7 +74,7 @@ func (RequestorImpl) Invoke(inv Invocation) (t Termination, err error) {
 
 	msg := Message{
 		Header{"GIOP", 1, true, 0, 0},
-		Body{requestHeader, requestBody, nil, nil}}
+		Body{requestHeader, requestBody, ReplyHeader{}, nil}}
 
 	var bytes []byte
 	bytes, err = Marshall(msg)

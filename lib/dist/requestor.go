@@ -10,7 +10,7 @@ type Invocation interface {
 	OperationName() string
 	SetOperationName(operationName string)
 	Parameters() []interface{}
-	SetParameters(parameters [2]string)
+	SetParameters(parameters []interface{})
 }
 
 type Termination interface {
@@ -18,5 +18,5 @@ type Termination interface {
 }
 
 type Requestor interface {
-	Invoke(inv Invocation) Termination
+	Invoke(inv Invocation) (t Termination, err error)
 }
