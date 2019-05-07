@@ -2,7 +2,6 @@ package dist
 
 import (
 	"middleware/lib/infra/client"
-	"unsafe"
 )
 
 // Implements Invocation
@@ -11,7 +10,7 @@ type InvocationImpl struct {
 	ipAddress     string
 	portNumber    int
 	operationName string
-	parameters    [2]string
+	parameters    []interface{}
 }
 
 func (i InvocationImpl) ObjectId() int {
@@ -46,11 +45,11 @@ func (i InvocationImpl) SetOperationName(operationName string) {
 	i.operationName = operationName
 }
 
-func (i InvocationImpl) Parameters() [2]string {
+func (i InvocationImpl) Parameters() []interface{} {
 	return i.parameters
 }
 
-func (i InvocationImpl) SetParameters(parameters [2]string) {
+func (i InvocationImpl) SetParameters(parameters []interface{}) {
 	i.parameters = parameters
 }
 
@@ -68,23 +67,30 @@ type RequestorImpl struct{}
 
 func (RequestorImpl) Invoke(inv Invocation) (t Termination, err error) {
 
-	crh := client.ClientRequestHandlerImpl{Host: inv.IpAddress(), Port: inv.PortNumber()}
+	crh := client.NewClientRequestHandlerImpl(inv.IpAddress(), inv.PortNumber())
 
-	msg := MessageImpl{HeaderImpl{"MID", "0.1", true, 0, 0}, BodyImpl{string()}} // inv.IpAddress() / strconv.Itoa(inv.PortNumber()) / inv.OperationName())
+	requestHeader := RequestHeader{inv.IpAddress(), inv.ObjectId(), true, inv.ObjectId(), inv.OperationName()}
+	requestBody := RequestBody{inv.Parameters()}
+
+	msg := Message{
+		Header{"GIOP", 1, true, 0, 0},
+		Body{requestHeader, requestBody, ReplyHeader{}, nil}}
 
 	var bytes []byte
 	bytes, err = Marshall(msg)
 	if err != nil {
 		return nil, err
 	}
+
 	crh.Send(bytes)
 
-	msgReturned, err := Unmarshall(crh.Receive())
+	var msgReturned Message
+	msgReturned, err = Unmarshall(crh.Receive())
 	if err != nil {
 		return nil, err
 	}
 
-	t = TerminationImpl{msgReturned.Body().ReplyBody()}
+	t = TerminationImpl{msgReturned.Body.ReplyBody}
 
 	return t, err
 }

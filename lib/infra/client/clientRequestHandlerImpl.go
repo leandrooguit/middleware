@@ -10,15 +10,12 @@ import (
 type ClientRequestHandlerImpl struct {
 	Host string
 	Port int
+	conect net.Conn
 }
 
-func (crh ClientRequestHandlerImpl) Receive() (msg []byte) {
-	return nil
-	//panic("implement me")
-}
+func NewClientRequestHandlerImpl(host string, port int) *ClientRequestHandlerImpl {
 
-func (crh ClientRequestHandlerImpl) Send(msg []byte) {
-	address := crh.Host + ":" +strconv.Itoa(crh.Port)
+	address := host + ":" + strconv.Itoa(port)
 
 	conexao, erro1 := net.Dial("tcp", address)
 
@@ -27,12 +24,23 @@ func (crh ClientRequestHandlerImpl) Send(msg []byte) {
 		os.Exit(3)
 	}
 
-	_, erro2 := conexao.Write(msg)
+	return &ClientRequestHandlerImpl{Host: host, Port: port, conect: conexao}
+}
 
+func (crh ClientRequestHandlerImpl) Receive() (msg []byte) {
+	_, err := crh.conect.Read(msg)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(3)
+	}
+
+	return msg
+}
+
+func (crh ClientRequestHandlerImpl) Send(msg []byte) {
+	_, erro2 := crh.conect.Write(msg)
 	if erro2 != nil {
 		fmt.Println(erro2)
 		os.Exit(3)
 	}
-
-	fmt.Println("Mensagem enviada de forma ficticia")
 }

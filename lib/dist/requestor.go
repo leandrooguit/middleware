@@ -9,8 +9,8 @@ type Invocation interface {
 	SetPortNumber(portNumber int)
 	OperationName() string
 	SetOperationName(operationName string)
-	Parameters() [2]string
-	SetParameters(parameters [2]string)
+	Parameters() []interface{}
+	SetParameters(parameters []interface{})
 }
 
 type Termination interface {
@@ -18,5 +18,5 @@ type Termination interface {
 }
 
 type Requestor interface {
-	Invoke(inv Invocation) Termination
+	Invoke(inv Invocation) (t Termination, err error)
 }

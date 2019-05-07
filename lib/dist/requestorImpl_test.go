@@ -17,17 +17,17 @@ func TestRequestorImpl_Invoke(t *testing.T) {
 	}{
 		{"Teste 1",
 			RequestorImpl{},
-			args{InvocationImpl{1000, "127.0.0.1", 1234, "play", [2]string{"P", "T"}}},
+			args{InvocationImpl{1000, "127.0.0.1", 1234, "play", []interface{}{"P", "T"}}},
 			TerminationImpl{},
 		},
 		{"Teste 2",
 			RequestorImpl{},
-			args{InvocationImpl{1000, "127.0.0.1", 1234, "play", [2]string{"P", "P"}}},
+			args{InvocationImpl{1000, "127.0.0.1", 1234, "play", []interface{}{"P", "P"}}},
 			TerminationImpl{},
 		},
 		{"Teste 3",
 			RequestorImpl{},
-			args{InvocationImpl{1000, "127.0.0.1", 1234, "play", [2]string{"T", "P"}}},
+			args{InvocationImpl{1000, "127.0.0.1", 1234, "play", []interface{}{"T", "P"}}},
 			TerminationImpl{},
 		},
 	}
@@ -36,7 +36,11 @@ func TestRequestorImpl_Invoke(t *testing.T) {
 
 		t.Run(tt.name, func(t *testing.T) {
 
-			got := tt.r.Invoke(tt.args.inv)
+			got, err := tt.r.Invoke(tt.args.inv)
+
+			if err != nil {
+				t.Errorf("RequestorImpl.Invoke() = Error %v", err)
+			}
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("RequestorImpl.Invoke() = %v, want %v", got, tt.want)
