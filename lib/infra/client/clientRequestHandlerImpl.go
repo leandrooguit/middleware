@@ -1,9 +1,11 @@
 package client
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
+	"shared"
 	"strconv"
 )
 
