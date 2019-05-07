@@ -54,3 +54,12 @@ func (s ServerRequestHandlerImpl) Receive() []byte {
 
 	return msgFromClient[:n]
 }
+
+func (s ServerRequestHandlerImpl) Send(msg []byte) {
+	// Enviar mensagem processada de volta para o cliente
+	_, error := s.conect.Write(msg)
+	if error != nil{
+		fmt.Println(error)
+		os.Exit(3)
+	}
+}
