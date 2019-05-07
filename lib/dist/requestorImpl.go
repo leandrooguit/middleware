@@ -67,7 +67,7 @@ type RequestorImpl struct{}
 
 func (RequestorImpl) Invoke(inv Invocation) (t Termination, err error) {
 
-	crh := client.ClientRequestHandlerImpl{Host: inv.IpAddress(), Port: inv.PortNumber()}
+	crh := client.NewClientRequestHandlerImpl(inv.IpAddress(), inv.PortNumber())
 
 	requestHeader := RequestHeader{inv.IpAddress(), inv.ObjectId(), true, inv.ObjectId(), inv.OperationName()}
 	requestBody := RequestBody{inv.Parameters()}
@@ -81,6 +81,7 @@ func (RequestorImpl) Invoke(inv Invocation) (t Termination, err error) {
 	if err != nil {
 		return nil, err
 	}
+
 	crh.Send(bytes)
 
 	var msgReturned Message
